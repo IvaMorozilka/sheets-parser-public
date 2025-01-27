@@ -3,6 +3,7 @@ from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter
 import argparse
 import os
+import warnings
 from icecream import ic
 ic.configureOutput(prefix = "LOGS| ")
 ic.disable()
@@ -55,6 +56,12 @@ def transform_pipeline(sheet, input, output, modded):
             raise Exception(
                 'При расчетах произошла ошибка. Не были найдены ячейки "Развитие" или "Сопровождение" в колонке "Наименование показателя эффективности и результативности деятельности учреждения". Возможно опечатки.'
             )
+        
+    if any(len(value.split("+")) < 6 for value in logs[0].values()):
+        warnings.warn('Внимание. Настоятельно рекомендуется проверить расчеты с помощью логов. Не все суммы (руб) содержат 6 значений.', UserWarning)
+        
+    if any(len(value.split("/")[1].split("+")) < 6 for value in logs[1].values()):
+        warnings.warn('Внимание. Настоятельно рекомендуется проверить расчеты с помощью логов. Не все выражения (проценты) содержат 6 значений в знаменателе.', UserWarning)
 
     last_row = find_last_row_with_word(sheet, otvetst_col_letter, "Бекетова") + 1
     col_rub = get_column_letter(find_column_index_by_header(sheet, ["Итого", "руб"]))
@@ -96,7 +103,7 @@ def transform_pipeline(sheet, input, output, modded):
             save_path = output
             workbook.save(save_path)
         ic("Файл сохранен по пути:", save_path)
-        return True, f"Файл успешно обработан и сохранен в {save_path}"
+        return True, f"Файл успешно обработан и сохранен как {save_path}"
         
     except Exception as e:
         raise Exception(f"Произошла ошибка при сохранении файла. {e}")
@@ -125,6 +132,6 @@ if __name__ == "__main__":
     if args.verbose:
         ic.enable()
     
-    transform_pipeline(sheet, args.input, args.output, args.modded)
+    print(transform_pipeline(sheet, args.input, args.output, args.modded)[1])
 
 
