@@ -2,7 +2,7 @@
 ## Использование
 1. Настроить среду: 
     1. Через Conda командой `conda env create -f enviroment.yml`, затем `conda activate <имя среды>`
-    2. Использовать версию Python 3.11 (остальные не тестировал) и установить пакеты командой `pip install -r requirements.txt`
+    2. Использовать версию **>= Python 3.8** и установить пакеты командой `pip install -r requirements.txt`
 2. Запустить скрипт через `script.py` командой `python3 script.py <Excel файл>` с указанием аргументов командной строки.
 
 ## Описание аргументов
