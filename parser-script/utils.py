@@ -51,8 +51,17 @@ def set_column_width(sheet, columns, width):
         sheet.column_dimensions[col].width = width
 
 
-def replace_bad_values(sheet):
+def replace_bad_values(sheet, remove_control_char = False):
     # Замена значений в ячейках
+    def remove_control_characters(text):
+        if text is None:
+            return text
+        # Регулярное выражение для удаления управляющих символов и пробелов
+        # Удаляем все управляющие символы
+        text = re.sub(r'[\x00-\x1F\x7F]', '', str(text))
+        # Удаляем пробелы в начале строки
+        text = re.sub(r'^\s+', '', text)
+        return text
     for row in sheet.iter_rows():
         for cell in row:
             # Заменяем "-" на пустое значение
@@ -65,6 +74,11 @@ def replace_bad_values(sheet):
             if cell.value != "" and cell.data_type == "s":
                 if all(symb in cell.value for symb in ["-", "%"]):
                     cell.value = cell.value.split("-")[1]
+    
+    if remove_control_char:
+        for row in sheet.iter_rows(min_col=1, max_col=1):  # Только первая колонка
+            for cell in row: 
+                cell.value = remove_control_characters(cell.value)
     return sheet
 
 
@@ -205,17 +219,14 @@ def process_header(sheet):
         sheet.cell(row=1, column=responsible_col + 1, value="ID")
 
     # Оставляем только 4 столбца между 3-й ячейкой и "Итого"
-    start_col = 3  # Начинаем с 3-й ячейки
+    start_col = 2  # Начинаем с 3-й ячейки
     end_col = itogo_col - 1  # Заканчиваем перед "Итого"
-    total_columns = end_col - start_col + 1  # Общее количество столбцов
+    total_columns = end_col - start_col  # Общее количество столбцов
 
     if total_columns >= 4:
         columns_to_keep = 4
     else:
         columns_to_keep = 2
-
-    # Вычисляем, сколько столбцов нужно удалить
-    columns_to_delete = (end_col - start_col + 1) - columns_to_keep
 
     # Вычисляем, сколько столбцов нужно удалить
     columns_to_delete = total_columns - columns_to_keep
