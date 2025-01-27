@@ -8,7 +8,7 @@ from icecream import ic
 ic.configureOutput(prefix = "LOGS| ")
 ic.disable()
 
-def transform_pipeline(sheet, input, output, modded):
+def transform_pipeline(sheet, input, output, modded, intensive):
 
     # Проверка наличия активного листа
     if sheet is None:
@@ -43,7 +43,6 @@ def transform_pipeline(sheet, input, output, modded):
             break
 
     process_header(sheet)
-    sheet = replace_bad_values(sheet)
 
     otvetst_col_letter = get_column_letter(sheet.max_column - 1)
 
@@ -87,6 +86,7 @@ def transform_pipeline(sheet, input, output, modded):
     sheet.delete_rows(2)
     delete_empty_rows(sheet)
     fill_column_with_ids(sheet, 2, 2, get_column_letter(sheet.max_column))
+    sheet = replace_bad_values(sheet, intensive)
     apply_borders_to_all_cells(sheet)
     apply_font_to_all_cells(sheet, "Times New Roman", 11)
 
@@ -119,6 +119,7 @@ if __name__ == "__main__":
     parser.add_argument("--output", "-o", help="Путь к выходному файлу (обработанному). Если используется без аргумента -m указать название и расширение сохраняемого файла.", default="modified.xlsx")
     parser.add_argument("--modded", "-m", help="Добавить приставку modded_ к входному файлу.", action="store_true")
     parser.add_argument("--verbose", "-v", help="Включить минимальное логирование (пока только расчетов)", action="store_true")
+    parser.add_argument("--intensive", "-i", help="Удалить любые управляющие символы, включая пробел.", action="store_true")
 
     # Парсим аргументы
     args = parser.parse_args()
@@ -132,6 +133,4 @@ if __name__ == "__main__":
     if args.verbose:
         ic.enable()
     
-    print(transform_pipeline(sheet, args.input, args.output, args.modded)[1])
-
-
+    print(transform_pipeline(sheet, args.input, args.output, args.modded, args.intensive)[1])
