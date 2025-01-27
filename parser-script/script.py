@@ -83,7 +83,8 @@ def transform_pipeline(sheet, input, output, modded, intensive):
     move_and_replace_rows(sheet, otvetst_col_letter, "Гречушкин", last_row)
 
     # Заполняем id
-    sheet.delete_rows(2)
+    # Пока не будем удалять строку, чтобы было легче анализировать логи по вычислениям
+    # sheet.delete_rows(2)
     delete_empty_rows(sheet)
     fill_column_with_ids(sheet, 2, 2, get_column_letter(sheet.max_column))
     sheet = replace_bad_values(sheet, intensive)
