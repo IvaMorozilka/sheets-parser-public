@@ -298,7 +298,7 @@ def calculate_additional_data(sheet):
             "Не найдены ключевые строки ('Принято бюджетных обязательств (по месяцам нарастающим итогом) - ФАКТ' или 'Исполнено бюджетных обязательств (по месяцам нарастающим итогом) - ФАКТ') для расчетов."
         )
 
-    ic(prin_pos_start, prin_pos_end, isp_pos_start, isp_pos_end)
+    # ic(prin_pos_start, prin_pos_end, isp_pos_start, isp_pos_end)
 
     content = [
         "Развитие ИС Принято",
@@ -367,7 +367,7 @@ def calculate_additional_data(sheet):
 
     ic(logs)
     result = [result_rub, result_perc]
-    ic(result)
+    # ic(result)
 
     return result, logs
 

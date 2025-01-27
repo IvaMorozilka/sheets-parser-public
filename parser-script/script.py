@@ -4,6 +4,7 @@ from openpyxl.utils import get_column_letter
 import argparse
 import os
 from icecream import ic
+ic.configureOutput(prefix = "LOGS| ")
 ic.disable()
 
 def transform_pipeline(sheet, input, output, modded):
