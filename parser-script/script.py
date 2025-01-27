@@ -103,7 +103,7 @@ def transform_pipeline(sheet, input, output, modded):
             save_path = output
             workbook.save(save_path)
         ic("Файл сохранен по пути:", save_path)
-        return True, f"Файл успешно обработан и сохранен в {save_path}"
+        return True, f"Файл успешно обработан и сохранен как {save_path}"
         
     except Exception as e:
         raise Exception(f"Произошла ошибка при сохранении файла. {e}")
@@ -132,6 +132,6 @@ if __name__ == "__main__":
     if args.verbose:
         ic.enable()
     
-    transform_pipeline(sheet, args.input, args.output, args.modded)
+    print(transform_pipeline(sheet, args.input, args.output, args.modded)[1])
 
 
