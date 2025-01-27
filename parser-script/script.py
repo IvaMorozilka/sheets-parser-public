@@ -85,15 +85,18 @@ def transform_pipeline(sheet, input, output, modded):
 
     try:
         current_dir = os.getcwd()
+        save_path = None
         if modded:
             dir_path = os.path.join(current_dir, 'modded_files')
             if not os.path.exists(dir_path):
                 os.mkdir(dir_path)
-            workbook.save(os.path.join(dir_path, "изм_" + input))
-            return True, f"Файл успешно обработан и сохранен {os.path.join(dir_path, 'изм_' + input)}."
+            save_path = os.path.join(dir_path, "изм_" + input)
+            workbook.save(save_path)
         else:
-            workbook.save(output)
-            return True, "Файл успешно обработан и сохранен {output}"
+            save_path = output
+            workbook.save(save_path)
+        ic("Файл сохранене по пути:", save_path)
+        return True, f"Файл успешно обработан и сохранен в {save_path}"
         
     except Exception as e:
         raise Exception(f"Произошла ошибка при сохранении файла. {e}")
