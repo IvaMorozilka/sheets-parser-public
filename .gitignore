@@ -1,0 +1,8 @@
+# Игнорировать все файлы Excel
+*.xlsx
+*.xls
+*.xlsm
+*.xlsb
+
+# Игнорировать папку __pycache__
+__pycache__/
