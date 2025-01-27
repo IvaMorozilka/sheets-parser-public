@@ -66,14 +66,14 @@ def transform_pipeline(sheet, input, output, modded):
         sheet[f"A{last_row}"].value = key
         sheet[f"{col_rub}{last_row}"] = value_rub
         sheet[f"{col_rub}{last_row}"].number_format = "0.00"
-
+        sheet[f"{otvetst_col_letter}{last_row}"].value = "Бекетова"
         sheet[f"{col_perc}{last_row}"] = value_perc
         sheet[f"{col_perc}{last_row}"].number_format = "0.00%"
 
         last_row += 1
 
     # Переносим Гречушкина выше
-    move_and_replace_rows(sheet, otvetst_col_letter, "Гречушкин", 147)
+    move_and_replace_rows(sheet, otvetst_col_letter, "Гречушкин", last_row)
 
     # Заполняем id
     sheet.delete_rows(2)
