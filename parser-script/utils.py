@@ -205,17 +205,14 @@ def process_header(sheet):
         sheet.cell(row=1, column=responsible_col + 1, value="ID")
 
     # Оставляем только 4 столбца между 3-й ячейкой и "Итого"
-    start_col = 3  # Начинаем с 3-й ячейки
+    start_col = 2  # Начинаем с 3-й ячейки
     end_col = itogo_col - 1  # Заканчиваем перед "Итого"
-    total_columns = end_col - start_col + 1  # Общее количество столбцов
+    total_columns = end_col - start_col  # Общее количество столбцов
 
     if total_columns >= 4:
         columns_to_keep = 4
     else:
         columns_to_keep = 2
-
-    # Вычисляем, сколько столбцов нужно удалить
-    columns_to_delete = (end_col - start_col + 1) - columns_to_keep
 
     # Вычисляем, сколько столбцов нужно удалить
     columns_to_delete = total_columns - columns_to_keep
