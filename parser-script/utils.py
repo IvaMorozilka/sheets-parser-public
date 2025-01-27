@@ -51,17 +51,18 @@ def set_column_width(sheet, columns, width):
         sheet.column_dimensions[col].width = width
 
 
-def replace_bad_values(sheet, remove_control_char = False):
+def replace_bad_values(sheet, remove_control_char=False):
     # Замена значений в ячейках
     def remove_control_characters(text):
         if text is None:
             return text
         # Регулярное выражение для удаления управляющих символов и пробелов
         # Удаляем все управляющие символы
-        text = re.sub(r'[\x00-\x1F\x7F]', '', str(text))
+        text = re.sub(r"[\x00-\x1F\x7F]", "", str(text))
         # Удаляем пробелы в начале строки
-        text = re.sub(r'^\s+', '', text)
+        text = re.sub(r"^\s+", "", text)
         return text
+
     for row in sheet.iter_rows():
         for cell in row:
             # Заменяем "-" на пустое значение
@@ -74,10 +75,10 @@ def replace_bad_values(sheet, remove_control_char = False):
             if cell.value != "" and cell.data_type == "s":
                 if all(symb in cell.value for symb in ["-", "%"]):
                     cell.value = cell.value.split("-")[1]
-    
+
     if remove_control_char:
         for row in sheet.iter_rows(min_col=1, max_col=1):  # Только первая колонка
-            for cell in row: 
+            for cell in row:
                 cell.value = remove_control_characters(cell.value)
     return sheet
 
@@ -325,31 +326,35 @@ def calculate_additional_data(sheet):
     result_perc = dict.fromkeys(content, 0)
     result_temp = [0, 0, 0]
 
+    # Шаблоны для поиска. Так как появились опечатки в док-ах 25 года. Неизвестно когда их не станет (:
+    razvitie = ["развитие", "развтие"]
+    soprovogdenie = ["сопровождение"]
+
     for i in range(prin_pos_start, prin_pos_end + 1):
-        if str(sheet[f"A{i}"].value).strip().lower() == "развитие":
+        if str(sheet[f"A{i}"].value).strip().lower() in razvitie:
             logs_rub["Развитие ИС Принято"] += f"{col_rub}{i} "
             logs_rub["ИС Принято"] += f"{col_rub}{i - 1} "
 
             result_rub["Развитие ИС Принято"] += sheet[f"{col_rub}{i}"].value
             result_rub["ИС Принято"] += sheet[f"{col_rub}{i - 1}"].value
 
-        elif str(sheet[f"A{i}"].value).strip().lower() == "сопровождение":
+        elif str(sheet[f"A{i}"].value).strip().lower() in soprovogdenie:
             logs_rub["Сопровождение Принято"] += f"{col_rub}{i} "
             result_rub["Сопровождение Принято"] += sheet[f"{col_rub}{i}"].value
 
     for i in range(isp_pos_start, isp_pos_end + 1):
-        if str(sheet[f"A{i}"].value).strip().lower() == "развитие":
+        if str(sheet[f"A{i}"].value).strip().lower() in razvitie:
             logs_rub["Развитие ИС исполнено"] += f"{col_rub}{i} "
             logs_rub["ИС Исполнено"] += f"{col_rub}{i - 1} "
 
             result_rub["Развитие ИС исполнено"] += sheet[f"{col_rub}{i}"].value
             result_rub["ИС Исполнено"] += sheet[f"{col_rub}{i - 1}"].value
-        elif str(sheet[f"A{i}"].value).strip().lower() == "сопровождение":
+        elif str(sheet[f"A{i}"].value).strip().lower() in soprovogdenie:
             logs_rub["Сопровождение Исполнено"] += f"{col_rub}{i} "
             result_rub["Сопровождение Исполнено"] += sheet[f"{col_rub}{i}"].value
 
     for i in range(vydel_pos_start, vydel_pos_end + 1):
-        if str(sheet[f"A{i}"].value).strip().lower() == "развитие":
+        if str(sheet[f"A{i}"].value).strip().lower() in razvitie:
             logs_perc["Развитие ИС исполнено"] += f"{col_rub}{i} "
             logs_perc["Развитие ИС Принято"] += f"{col_rub}{i} "
             logs_perc["ИС Исполнено"] += f"{col_rub}{i - 1} "
@@ -357,7 +362,7 @@ def calculate_additional_data(sheet):
 
             result_temp[0] += sheet[f"{col_rub}{i}"].value
             result_temp[2] += sheet[f"{col_rub}{i - 1}"].value
-        elif str(sheet[f"A{i}"].value).strip().lower() == "сопровождение":
+        elif str(sheet[f"A{i}"].value).strip().lower() in soprovogdenie:
             logs_perc["Сопровождение Исполнено"] += f"{col_rub}{i} "
             logs_perc["Сопровождение Принято"] += f"{col_rub}{i} "
             result_temp[1] += sheet[f"{col_rub}{i}"].value
@@ -381,4 +386,3 @@ def calculate_additional_data(sheet):
     # ic(result)
 
     return result, logs
-
